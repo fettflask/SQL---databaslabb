@@ -1,0 +1,118 @@
+drop database a23albed;
+create database a23albed;
+use a23albed;
+
+create table skjutfalt(
+	faltnamn varchar(20),
+    tele char(12),
+    stad varchar(20),
+    primary key (faltnamn)
+)engine=innodb;
+
+create table skjutbana(
+	bannr varchar(2),
+    moment varchar(3),
+    faltnamn varchar(20),
+    primary key (bannr),
+    foreign key (faltnamn) references skjutfalt (faltnamn)
+)engine=innodb;
+
+create table funktionar(
+	funkpnr char(13),
+    lon varchar(6),
+    namn varchar(30),
+    faltnamn varchar(20),
+    bannr varchar(2),
+    primary key (funkpnr),
+    foreign key (faltnamn) references skjutfalt (faltnamn),
+    foreign key (bannr) references skjutbana (bannr)
+)engine=innodb;
+
+create table maltavla(
+	tavlanr varchar(2),
+    antal varchar(3),
+    primary key (tavlanr)
+)engine=innodb;
+
+create table skytt(
+	skyttpnr char(13),
+    namn varchar(30),
+    team varchar(20),
+    primary key (skyttpnr)
+)engine=innodb;
+
+create table skjutserie(
+	starttid datetime,
+    tavlanr varchar(2),
+    resultat char(5),
+    skyttpnr char(13),
+    funkpnr char(13),
+    bannr varchar(2),
+    primary key (starttid, tavlanr),
+    foreign key (skyttpnr) references skytt (skyttpnr),
+    foreign key (funkpnr) references funktionar (funkpnr),
+    foreign key (tavlanr) references maltavla (tavlanr)
+)engine=innodb;
+
+create table gevar(
+	gevarnamn varchar(20),
+    skyttpnr char(13),
+    vikt varchar(4),
+    primary key (gevarnamn, skyttpnr),
+    foreign key (skyttpnr) references skytt(skyttpnr)
+)engine=innodb;
+
+create table ammunition(
+	kaliber varchar(6),
+    gevarnamn varchar(20),
+    skyttpnr char(13),
+    ammonamn varchar(15),
+    primary key (kaliber, gevarnamn, skyttpnr),
+    foreign key (gevarnamn) references gevar(gevarnamn),
+    foreign key (skyttpnr) references skytt(skyttpnr)
+)engine=innodb;
+
+create table ansvar(
+	funkpnr char(12),
+    kaliber varchar(6),
+    primary key (funkpnr, kaliber),
+    foreign key (funkpnr) references funktionar(funkpnr),
+    foreign key (kaliber) references ammunition(kaliber)
+)engine=innodb;
+
+
+-- Skutfält
+insert into skjutfalt(faltnamn, tele, stad) values
+	('Kråk', '0500-999999', 'Skövde');
+
+-- Skjutbanor
+insert into skjutbana(bannr, faltnamn, moment) values
+	('1', 'Kråk', ''),
+	('2', 'Kråk', '');
+
+-- Funktionär
+insert into funktionar(funkpnr, lon, namn, faltnamn, bannr) values 
+	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'),
+	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2');
+
+-- Måltavlor
+
+-- Skytt
+insert into skytt(skyttpnr, namn, team) values
+	('19560123-6666', 'Bosse Fors', 'Göteborg'),
+	('19761223-5656', 'Henrik Knutsson', 'Motala');
+    
+-- Skjutserie
+
+-- Gevär
+insert into gevar(gevarnamn, skyttpnr, vikt) values
+	('Izhmash', '19761223-5656', '4.5'),
+    ('Izhmash', '19560123-6666', '4.5');
+    
+-- Ammunition
+insert into ammuniton(kaliber, gevarnamn, skyttpnr, ammonamn) values
+	('.22', '')
+
+-- Ansvar 
+select * from skytt;
+select * from gevar;
