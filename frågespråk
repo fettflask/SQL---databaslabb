@@ -1,0 +1,38 @@
+use a23albed;
+
+-- 1
+select tele 
+from skjutfalt;
+
+-- 2
+select namn, lon
+from funktionar
+where funkpnr='19790129-4444';
+
+-- 3
+select funktionar.namn
+from funktionar, ansvar, ammunition
+where ammunition.ammonamn='X-act' AND ansvar.skyttpnr=ammunition.skyttpnr AND ansvar.funkpnr=funktionar.funkpnr;
+
+-- 4
+select skytt.skyttpnr
+from skytt, gevar, ammunition
+where gevar.gevarnamn='Izhmash' AND ammunition.kaliber='.22' AND ammunition.ammonamn='X-act' AND skytt.skyttpnr=ammunition.skyttpnr AND skytt.skyttpnr=gevar.skyttpnr;
+
+-- 5
+select funktionar.namn
+from funktionar, skjutbana, skjutfalt
+where skjutbana.moment='Stående' AND skjutbana.bannr=funktionar.bannr AND skjutfalt.faltnamn=skjutbana.faltnamn;
+
+-- 6
+
+
+-- 7
+select * 
+from skjutserie, skytt
+where skjutserie.skyttpnr=skytt.skyttpnr
+
+-- 8
+
+
+-- 9
