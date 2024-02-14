@@ -42,9 +42,9 @@ create table skytt(
 )engine=innodb;
 
 create table skjutserie(
-	starttid datetime,
+	starttid time,
     tavlanr varchar(2),
-    resultat char(5),
+    resultat varchar(2),
     skyttpnr char(13),
     funkpnr char(13),
     bannr varchar(2),
@@ -73,7 +73,7 @@ create table ammunition(
 )engine=innodb;
 
 create table ansvar(
-	funkpnr char(12),
+	funkpnr char(13),
     kaliber varchar(6),
     primary key (funkpnr, kaliber),
     foreign key (funkpnr) references funktionar(funkpnr),
@@ -88,31 +88,58 @@ insert into skjutfalt(faltnamn, tele, stad) values
 -- Skjutbanor
 insert into skjutbana(bannr, faltnamn, moment) values
 	('1', 'Kråk', ''),
-	('2', 'Kråk', '');
+	('2', 'Kråk', ''),
+    ('3', 'Kråk', ''),
+    ('4', 'Kråk', '');
 
 -- Funktionär
 insert into funktionar(funkpnr, lon, namn, faltnamn, bannr) values 
 	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'),
-	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2');
+	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2'),
+    ('19870923-3434', '19000', 'Jari Jurvakainen', 'Kråk', '3'),
+    ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4');
 
 -- Måltavlor
+insert into maltavla(tavlanr, antal) values
+	('2', '5'),
+    ('4', '5');
 
 -- Skytt
 insert into skytt(skyttpnr, namn, team) values
 	('19560123-6666', 'Bosse Fors', 'Göteborg'),
-	('19761223-5656', 'Henrik Knutsson', 'Motala');
+	('19761223-5656', 'Henrik Knutsson', 'Motala'),
+    ('19781222-2323', 'Allan Schumacher', 'Skultorp'),
+    ('19801010-6464', 'Nisse von Reow', 'Örebro');
     
 -- Skjutserie
+insert into skjutserie(starttid, tavlanr, resultat, skyttpnr, funkpnr, bannr) values
+	('13:01:33', '2', '5', '19560123-6666', '19790129-4444', '1'),
+    ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4');
 
 -- Gevär
 insert into gevar(gevarnamn, skyttpnr, vikt) values
 	('Izhmash', '19761223-5656', '4.5'),
-    ('Izhmash', '19560123-6666', '4.5');
+    ('Izhmash', '19560123-6666', '4.5'),
+    ('Luger', '19781222-2323', '5'),
+    ('Savage', '19801010-6464', '4');
     
 -- Ammunition
-insert into ammuniton(kaliber, gevarnamn, skyttpnr, ammonamn) values
-	('.22', '')
+insert into ammunition(kaliber, gevarnamn, skyttpnr, ammonamn) values
+	('.22', 'Izhmash', '19560123-6666', 'X-act'),
+    ('.22', 'Luger', '19781222-2323', 'Midas+'),
+    ('.22', 'Savage', '19801010-6464', 'WSM');
 
 -- Ansvar 
+insert into ansvar(funkpnr, kaliber) values
+	('19870923-3434', '.22'),
+    ('19560123-4455', '.22');
+
+select * from skjutfalt;
+select * from skjutbana;
+select * from funktionar;
+select * from maltavla;
 select * from skytt;
+select * from skjutserie;
 select * from gevar;
+select * from ammunition;
+select * from ansvar;
