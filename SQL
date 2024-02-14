@@ -11,7 +11,7 @@ create table skjutfalt(
 
 create table skjutbana(
 	bannr varchar(2),
-    moment varchar(3),
+    moment varchar(10),
     faltnamn varchar(20),
     primary key (bannr),
     foreign key (faltnamn) references skjutfalt (faltnamn)
@@ -75,46 +75,60 @@ create table ammunition(
 create table ansvar(
 	funkpnr char(13),
     kaliber varchar(6),
-    primary key (funkpnr, kaliber),
+    gevarnamn varchar(20),
+    skyttpnr char(13),
+    primary key (funkpnr, kaliber, gevarnamn, skyttpnr),
     foreign key (funkpnr) references funktionar(funkpnr),
-    foreign key (kaliber) references ammunition(kaliber)
+    foreign key (kaliber) references ammunition(kaliber),
+    foreign key (gevarnamn) references gevar(gevarnamn),
+    foreign key (skyttpnr) references skytt(skyttpnr)
 )engine=innodb;
 
 
 -- Skutfält
 insert into skjutfalt(faltnamn, tele, stad) values
-	('Kråk', '0500-999999', 'Skövde');
+	('Kråk', '0500-999999', 'Skövde'),
+    ('Schut', '0500-888888', 'Skultorp'),
+    ('Vers', '0500-777777', 'Värsås');
 
 -- Skjutbanor
 insert into skjutbana(bannr, faltnamn, moment) values
-	('1', 'Kråk', ''),
-	('2', 'Kråk', ''),
-    ('3', 'Kråk', ''),
-    ('4', 'Kråk', '');
+	('1', 'Kråk', 'Liggande'),
+	('2', 'Kråk', 'Liggande'),
+    ('3', 'Schut', 'Liggande'),
+    ('4', 'Kråk', 'Stående'),
+    ('5', 'Vers', 'Stående');
 
 -- Funktionär
 insert into funktionar(funkpnr, lon, namn, faltnamn, bannr) values 
 	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'),
 	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2'),
-    ('19870923-3434', '19000', 'Jari Jurvakainen', 'Kråk', '3'),
-    ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4');
+    ('19870923-3434', '19000', 'Jari Jurvakainen', 'Schut', '3'),
+    ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4'),
+    ('19670809-9999', '18000', 'Benny By', 'Vers',  '5');
 
 -- Måltavlor
 insert into maltavla(tavlanr, antal) values
+	('1', '5'),
 	('2', '5'),
-    ('4', '5');
+    ('3', '5'),
+    ('4', '5'),
+    ('5', '5');
 
 -- Skytt
 insert into skytt(skyttpnr, namn, team) values
 	('19560123-6666', 'Bosse Fors', 'Göteborg'),
 	('19761223-5656', 'Henrik Knutsson', 'Motala'),
     ('19781222-2323', 'Allan Schumacher', 'Skultorp'),
-    ('19801010-6464', 'Nisse von Reow', 'Örebro');
+    ('19801010-6464', 'Nisse von Reow', 'Skövde'),
+    ('19910422-6394', 'Ivar Andersson', 'Skövde');
     
 -- Skjutserie
 insert into skjutserie(starttid, tavlanr, resultat, skyttpnr, funkpnr, bannr) values
 	('13:01:33', '2', '5', '19560123-6666', '19790129-4444', '1'),
-    ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4');
+    ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4'),
+    ('12:37:18', '5', '4', '19910422-6394', '19670809-9999', '5'),
+    ('14:33:22', '3', '2', '19910422-6394', '19870923-3434', '3');
 
 -- Gevär
 insert into gevar(gevarnamn, skyttpnr, vikt) values
@@ -130,16 +144,7 @@ insert into ammunition(kaliber, gevarnamn, skyttpnr, ammonamn) values
     ('.22', 'Savage', '19801010-6464', 'WSM');
 
 -- Ansvar 
-insert into ansvar(funkpnr, kaliber) values
-	('19870923-3434', '.22'),
-    ('19560123-4455', '.22');
-
-select * from skjutfalt;
-select * from skjutbana;
-select * from funktionar;
-select * from maltavla;
-select * from skytt;
-select * from skjutserie;
-select * from gevar;
-select * from ammunition;
-select * from ansvar;
+insert into ansvar(funkpnr, kaliber, gevarnamn, skyttpnr) values
+	('19870923-3434', '.22', 'Luger', '19781222-2323'),
+    ('19560123-4455', '.22', 'Savage', '19801010-6464'),
+    ('19810912-5555', '.22', 'Izhmash', '19560123-6666');
