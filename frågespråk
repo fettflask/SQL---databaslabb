@@ -1,160 +1,7 @@
-drop database a23albed;
-create database a23albed;
-use a23albed;
-
-create table skjutfalt(
-	faltnamn varchar(20),
-    tele char(12),
-    stad varchar(20),
-    primary key (faltnamn)
-)engine=innodb;
-
-create table skjutbana(
-	bannr varchar(2),
-    moment varchar(10),
-    faltnamn varchar(20),
-    primary key (bannr),
-    foreign key (faltnamn) references skjutfalt (faltnamn)
-)engine=innodb;
-
-create table funktionar(
-	funkpnr char(13),
-    lon varchar(6),
-    namn varchar(30),
-    faltnamn varchar(20),
-    bannr varchar(2),
-    primary key (funkpnr),
-    foreign key (faltnamn) references skjutfalt (faltnamn),
-    foreign key (bannr) references skjutbana (bannr)
-)engine=innodb;
-
-create table maltavla(
-	tavlanr varchar(2),
-    antal varchar(3),
-    primary key (tavlanr)
-)engine=innodb;
-
-create table skytt(
-	skyttpnr char(13),
-    namn varchar(30),
-    team varchar(20),
-    primary key (skyttpnr)
-)engine=innodb;
-
-create table skjutserie(
-	starttid time,
-    tavlanr varchar(2),
-    resultat varchar(2),
-    skyttpnr char(13),
-    funkpnr char(13),
-    bannr varchar(2),
-    primary key (starttid, tavlanr),
-    foreign key (skyttpnr) references skytt (skyttpnr),
-    foreign key (funkpnr) references funktionar (funkpnr),
-    foreign key (tavlanr) references maltavla (tavlanr)
-)engine=innodb;
-
-create table gevar(
-	gevarnamn varchar(20),
-    skyttpnr char(13),
-    vikt varchar(4),
-    primary key (gevarnamn, skyttpnr),
-    foreign key (skyttpnr) references skytt(skyttpnr)
-)engine=innodb;
-
-create table ammunition(
-	kaliber varchar(6),
-    gevarnamn varchar(20),
-    skyttpnr char(13),
-    ammonamn varchar(15),
-    primary key (kaliber, gevarnamn, skyttpnr),
-    foreign key (gevarnamn) references gevar(gevarnamn),
-    foreign key (skyttpnr) references skytt(skyttpnr)
-)engine=innodb;
-
-create table ansvar(
-	funkpnr char(13),
-    kaliber varchar(6),
-    gevarnamn varchar(20),
-    skyttpnr char(13),
-    primary key (funkpnr, kaliber, gevarnamn, skyttpnr),
-    foreign key (funkpnr) references funktionar(funkpnr),
-    foreign key (kaliber) references ammunition(kaliber),
-    foreign key (gevarnamn) references gevar(gevarnamn),
-    foreign key (skyttpnr) references skytt(skyttpnr)
-)engine=innodb;
-
-
--- Skutfält
-insert into skjutfalt(faltnamn, tele, stad) values
-	('Kråk', '0500-999999', 'Skövde'),
-    ('Schut', '0500-888888', 'Skultorp'),
-    ('Vers', '0500-777777', 'Värsås');
-
--- Skjutbanor
-insert into skjutbana(bannr, faltnamn, moment) values
-	('1', 'Kråk', 'Liggande'),
-	('2', 'Kråk', 'Liggande'),
-    ('3', 'Schut', 'Liggande'),
-    ('4', 'Kråk', 'Stående'),
-    ('5', 'Vers', 'Stående');
-
--- Funktionär
-insert into funktionar(funkpnr, lon, namn, faltnamn, bannr) values 
-	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'),
-	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2'),
-    ('19870923-3434', '11000', 'Jari Jurvakainen', 'Schut', '3'),
-    ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4'),
-    ('19670809-9999', '18000', 'Benny By', 'Vers',  '5');
-
--- Måltavlor
-insert into maltavla(tavlanr, antal) values
-	('1', '5'),
-	('2', '5'),
-    ('3', '5'),
-    ('4', '5'),
-    ('5', '5');
-
--- Skytt
-insert into skytt(skyttpnr, namn, team) values
-	('19560123-6666', 'Bosse Fors', 'Göteborg'),
-	('19761223-5656', 'Henrik Knutsson', 'Motala'),
-    ('19781222-2323', 'Allan Schumacher', 'Skultorp'),
-    ('19801010-6464', 'Nisse von Reow', 'Skövde'),
-    ('19910422-6394', 'Ivar Andersson', 'Skövde'),
-    ('950723-164823', 'Juliano Alvarez', 'Roskilde');
-    
--- Skjutserie
-insert into skjutserie(starttid, tavlanr, resultat, skyttpnr, funkpnr, bannr) values
-	('13:01:33', '2', '2', '19560123-6666', '19790129-4444', '1'),
-    ('13:03:33', '2', '5', '19560123-6666', '19790129-4444', '1'),
-    ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4'),
-    ('12:37:18', '5', '4', '19781222-2323', '19670809-9999', '5'),
-    ('14:33:22', '3', '2', '19910422-6394', '19870923-3434', '3');
-
--- Gevär
-insert into gevar(gevarnamn, skyttpnr, vikt) values
-	('Izhmash', '19761223-5656', '4.5'),
-    ('Izhmash', '19560123-6666', '4.5'),
-    ('Luger', '19781222-2323', '5'),
-    ('Savage', '19801010-6464', '4');
-    
--- Ammunition
-insert into ammunition(kaliber, gevarnamn, skyttpnr, ammonamn) values
-	('.22', 'Izhmash', '19560123-6666', 'X-act'),
-    ('.22', 'Luger', '19781222-2323', 'Midas+'),
-    ('.22', 'Savage', '19801010-6464', 'WSM');
-
--- Ansvar 
-insert into ansvar(funkpnr, kaliber, gevarnamn, skyttpnr) values
-	('19870923-3434', '.22', 'Luger', '19781222-2323'),
-    ('19560123-4455', '.22', 'Savage', '19801010-6464'),
-    ('19810912-5555', '.22', 'Izhmash', '19560123-6666');
-
-
 -- 1
 select tele 
-from skjutfalt;
+from skjutfalt
+where faltnamn='Kråk';
 
 -- 2
 select namn, lon
@@ -177,12 +24,14 @@ from funktionar, skjutbana, skjutfalt
 where skjutbana.moment='Stående' AND skjutbana.bannr=funktionar.bannr AND skjutfalt.faltnamn=skjutbana.faltnamn;
 
 -- 6
-
+select distinct temp1.funkpnr
+from funktionar temp1, funktionar temp2
+where temp1.lon = temp2.lon and temp1.funkpnr <> temp2.funkpnr;
 
 -- 7
-select distinct skytt.skyttpnr
-from skjutserie, skytt
-where skjutserie.skyttpnr=skytt.skyttpnr;
+select skyttpnr
+from skytt
+where not exists (select * from skjutserie where skytt.skyttpnr=skjutserie.skyttpnr);
 
 -- 8
 select skytt.team
@@ -235,16 +84,26 @@ from skytt, skjutserie
 where starttid = (select max(starttid) from skjutserie) and skjutserie.skyttpnr=skytt.skyttpnr;
 
 -- 18
-
+-- Det går egentligen inte för min databas sparar inga datum, men jag gör som
+-- jag skulle ha gjort fast med tid istället för datum
+select *
+from skjutserie
+where starttid=(select curtime() - (select curtime() - (select max(starttid) from skjutserie)));
 
 -- 19
 update funktionar
 set lon = lon * 1.03
 where lon >= 10000 and lon <= 12000;
 
-select *
-from funktionar;
 -- 20
+delete from maltavla
+where tavlanr = '8';
 
-
+select *
+from maltavla;
 -- 21
+delete from skjutserie
+where starttid = '12:01:33' and skyttpnr ='19560123-6666';
+
+select *
+from skjutserie
