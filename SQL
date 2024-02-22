@@ -103,7 +103,7 @@ insert into skjutbana(bannr, faltnamn, moment) values
 insert into funktionar(funkpnr, lon, namn, faltnamn, bannr) values 
 	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'),
 	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2'),
-    ('19870923-3434', '19000', 'Jari Jurvakainen', 'Schut', '3'),
+    ('19870923-3434', '11000', 'Jari Jurvakainen', 'Schut', '3'),
     ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4'),
     ('19670809-9999', '18000', 'Benny By', 'Vers',  '5');
 
@@ -113,7 +113,8 @@ insert into maltavla(tavlanr, antal) values
 	('2', '5'),
     ('3', '5'),
     ('4', '5'),
-    ('5', '5');
+    ('5', '5'),
+    ('8', '5');
 
 -- Skytt
 insert into skytt(skyttpnr, namn, team) values
@@ -121,13 +122,15 @@ insert into skytt(skyttpnr, namn, team) values
 	('19761223-5656', 'Henrik Knutsson', 'Motala'),
     ('19781222-2323', 'Allan Schumacher', 'Skultorp'),
     ('19801010-6464', 'Nisse von Reow', 'Skövde'),
-    ('19910422-6394', 'Ivar Andersson', 'Skövde');
+    ('19910422-6394', 'Ivar Andersson', 'Skövde'),
+    ('950723-164823', 'Juliano Alvarez', 'Roskilde');
     
 -- Skjutserie
 insert into skjutserie(starttid, tavlanr, resultat, skyttpnr, funkpnr, bannr) values
-	('13:01:33', '2', '5', '19560123-6666', '19790129-4444', '1'),
+	('12:01:33', '2', '2', '19560123-6666', '19790129-4444', '1'),
+    ('13:01:33', '2', '5', '19560123-6666', '19790129-4444', '1'),
     ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4'),
-    ('12:37:18', '5', '4', '19910422-6394', '19670809-9999', '5'),
+    ('12:37:18', '5', '4', '19781222-2323', '19670809-9999', '5'),
     ('14:33:22', '3', '2', '19910422-6394', '19870923-3434', '3');
 
 -- Gevär
@@ -148,3 +151,113 @@ insert into ansvar(funkpnr, kaliber, gevarnamn, skyttpnr) values
 	('19870923-3434', '.22', 'Luger', '19781222-2323'),
     ('19560123-4455', '.22', 'Savage', '19801010-6464'),
     ('19810912-5555', '.22', 'Izhmash', '19560123-6666');
+
+-- 1
+select tele 
+from skjutfalt
+where faltnamn='Kråk';
+
+-- 2
+select namn, lon
+from funktionar
+where funkpnr='19790129-4444';
+
+-- 3
+select funktionar.namn
+from funktionar, ansvar, ammunition
+where ammunition.ammonamn='X-act' AND ansvar.skyttpnr=ammunition.skyttpnr AND ansvar.funkpnr=funktionar.funkpnr;
+
+-- 4
+select skytt.skyttpnr
+from skytt, gevar, ammunition
+where gevar.gevarnamn='Izhmash' AND ammunition.kaliber='.22' AND ammunition.ammonamn='X-act' AND skytt.skyttpnr=ammunition.skyttpnr AND skytt.skyttpnr=gevar.skyttpnr;
+
+-- 5
+select funktionar.namn
+from funktionar, skjutbana, skjutfalt
+where skjutbana.moment='Stående' AND skjutbana.bannr=funktionar.bannr AND skjutfalt.faltnamn=skjutbana.faltnamn;
+
+-- 6
+select distinct temp1.funkpnr
+from funktionar temp1, funktionar temp2
+where temp1.lon = temp2.lon and temp1.funkpnr <> temp2.funkpnr;
+
+-- 7
+select skyttpnr
+from skytt
+where not exists (select * from skjutserie where skytt.skyttpnr=skjutserie.skyttpnr);
+
+-- 8
+select skytt.team
+from skjutserie, skytt
+where skjutserie.resultat='5' AND skjutserie.skyttpnr=skytt.skyttpnr;
+
+-- 9
+select *
+from skjutserie, skytt
+where skjutserie.skyttpnr=skytt.skyttpnr;
+
+-- 10
+select skjutserie.funkpnr, count(funkpnr)
+from skjutserie
+group by funkpnr
+having count(funkpnr) = 2;
+
+-- 11
+select *
+from funktionar
+order by namn DESC;
+
+-- 12
+select AVG(resultat)
+from skjutserie;
+
+-- 13
+select bannr, AVG(resultat)
+from skjutserie
+group by bannr;
+
+-- 14
+select *
+from skytt 
+where team rlike '^R';
+
+-- 15
+select namn, team
+from skytt
+where not skyttpnr rlike '^[0-9]{8}-[0-9]{4}$';
+
+-- 16
+select namn
+from funktionar
+where lon = (select max(lon) from funktionar);
+
+-- 17
+select skytt.namn
+from skytt, skjutserie
+where starttid = (select max(starttid) from skjutserie) and skjutserie.skyttpnr=skytt.skyttpnr;
+
+-- 18
+-- Det går egentligen inte för min databas sparar inga datum, men jag gör som
+-- jag skulle ha gjort fast med tid istället för datum
+select *
+from skjutserie
+where starttid=(select curtime() - (select curtime() - (select max(starttid) from skjutserie)));
+
+-- 19
+update funktionar
+set lon = lon * 1.03
+where lon >= 10000 and lon <= 12000;
+
+-- 20
+delete from maltavla
+where tavlanr = '8';
+
+select *
+from maltavla;
+-- 21
+delete from skjutserie
+where starttid = '12:01:33' and skyttpnr ='19560123-6666';
+
+select *
+from skjutserie
