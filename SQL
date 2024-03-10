@@ -87,69 +87,69 @@ create table ansvar(
 
 -- Skutfält
 insert into skjutfalt(faltnamn, tele, stad) values
-	('Kråk', '0500-999999', 'Skövde'),
+	('Kråk', '0500-999999', 'Skövde'), -- Transaktion 1
     ('Schut', '0500-888888', 'Skultorp'),
     ('Vers', '0500-777777', 'Värsås');
 
 -- Skjutbanor
 insert into skjutbana(bannr, faltnamn, moment) values
-	('1', 'Kråk', 'Liggande'),
-	('2', 'Kråk', 'Liggande'),
-    ('3', 'Schut', 'Liggande'),
-    ('4', 'Kråk', 'Stående'),
-    ('5', 'Vers', 'Stående');
+	('1', 'Kråk', 'Liggande'), -- Transaktion 2
+	('2', 'Kråk', 'Liggande'), -- Transaktion 2
+    ('3', 'Schut', 'Stående'), -- Transaktion 6
+    ('4', 'Kråk', 'Liggande'), -- Transaktion 8
+    ('5', 'Vers', 'Stående'); -- Transaktion 10
 
 -- Funktionär
 insert into funktionar(funkpnr, lon, namn, faltnamn, bannr) values 
-	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'),
-	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2'),
-    ('19870923-3434', '11000', 'Jari Jurvakainen', 'Schut', '3'),
-    ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4'),
-    ('19670809-9999', '18000', 'Benny By', 'Vers',  '5');
+	('19790129-4444', '18000', 'Berra Waltersson', 'Kråk', '1'), -- Transaktion 2
+	('19810912-5555', '18000', 'Pelle Zetterström', 'Kråk', '2'), -- Transaktion 2
+    ('19870923-3434', '11000', 'Jari Jurvakainen', 'Schut', '3'), -- Transaktion 6
+    ('19560123-4455', '20000', 'Ronny Irving', 'Kråk', '4'), -- Transaktion 8
+    ('19670809-9999', '18000', 'Benny By', 'Vers',  '5'); -- Transaktion 10
 
 -- Måltavlor
 insert into maltavla(tavlanr, antal) values
 	('1', '5'),
-	('2', '5'),
-    ('3', '5'),
-    ('4', '5'),
+	('2', '5'), -- Transaktion 7 & 9
+    ('3', '5'), 
+    ('4', '5'), -- Transaktion 8
     ('5', '5'),
-    ('8', '5');
+    ('8', '5'); -- Skapas bara för att tas bort
 
 -- Skytt
 insert into skytt(skyttpnr, namn, team) values
-	('19560123-6666', 'Bosse Fors', 'Göteborg'),
-	('19761223-5656', 'Henrik Knutsson', 'Motala'),
-    ('19781222-2323', 'Allan Schumacher', 'Skultorp'),
-    ('19801010-6464', 'Nisse von Reow', 'Skövde'),
-    ('19910422-6394', 'Ivar Andersson', 'Skövde'),
+	('19560123-6666', 'Bosse Fors', 'Göteborg'), -- Transaktion 3
+	('19761223-5656', 'Henrik Knutsson', 'Motala'), -- Transaktion 4
+    ('19781222-2323', 'Allan Schumacher', 'Skultorp'), -- Transaktion 6
+    ('19801010-6464', 'Nisse von Reow', 'Skövde'), -- Transaktion 8
+    ('19910422-6394', 'Ivar Andersson', 'Skövde'), -- Transaktion 10
     ('950723-164823', 'Juliano Alvarez', 'Roskilde');
     
 -- Skjutserie
 insert into skjutserie(starttid, tavlanr, resultat, skyttpnr, funkpnr, bannr) values
-	('12:01:33', '2', '2', '19560123-6666', '19790129-4444', '1'),
-    ('13:01:33', '2', '5', '19560123-6666', '19790129-4444', '1'),
-    ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4'),
-    ('12:37:18', '5', '4', '19781222-2323', '19670809-9999', '5'),
-    ('14:33:22', '3', '2', '19910422-6394', '19870923-3434', '3');
+	('12:01:33', '2', '2', '19560123-6666', '19790129-4444', '1'), -- Bosse skjuter, Berra obseverar
+    ('13:01:33', '2', '5', '19560123-6666', '19790129-4444', '1'), -- Bosse skjuter, Berra obseverar / Transaktion 7
+    ('12:00:34', '4', '5', '19801010-6464', '19560123-4455', '4'), -- Nisse skjuter, Ronny obseverar / Transaktion 8
+    ('12:37:18', '3', '4', '19781222-2323', '19870923-3434', '3'), -- Allan skjuter, Jari obseverar
+    ('14:33:22', '5', '2', '19910422-6394', '19670809-9999', '5'); -- Ivar skjuter, Benny obseverar / Transaktion 10
 
 -- Gevär
 insert into gevar(gevarnamn, skyttpnr, vikt) values
-	('Izhmash', '19761223-5656', '4.5'),
-    ('Izhmash', '19560123-6666', '4.5'),
-    ('Luger', '19781222-2323', '5'),
-    ('Savage', '19801010-6464', '4');
+	('Izhmash', '19761223-5656', '4.5'), -- Henriks gevär / Transaktion 4
+    ('Izhmash', '19560123-6666', '4.5'), -- Bosses gevär / Transaktion 5
+    ('Luger', '19781222-2323', '5'), -- Allans gevär / Transaktion 6
+    ('Savage', '19801010-6464', '4'); -- Nisses gevär / Transaktion 8
     
 -- Ammunition
 insert into ammunition(kaliber, gevarnamn, skyttpnr, ammonamn) values
-	('.22', 'Izhmash', '19560123-6666', 'X-act'),
-    ('.22', 'Luger', '19781222-2323', 'Midas+'),
-    ('.22', 'Savage', '19801010-6464', 'WSM');
+	('.22', 'Izhmash', '19560123-6666', 'X-act'), -- Bosses ammo / Transaktion 5
+    ('.22', 'Luger', '19781222-2323', 'Midas+'), -- Allans ammo / Transaktion 6
+    ('.22', 'Savage', '19801010-6464', 'WSM'); -- Nisses ammo / Transaktion 8
 
 -- Ansvar 
 insert into ansvar(funkpnr, kaliber, gevarnamn, skyttpnr) values
-	('19870923-3434', '.22', 'Luger', '19781222-2323'),
-    ('19560123-4455', '.22', 'Savage', '19801010-6464'),
+	('19870923-3434', '.22', 'Luger', '19781222-2323'), -- Transaktion 6
+    ('19560123-4455', '.22', 'Savage', '19801010-6464'), -- Transaktion 8
     ('19810912-5555', '.22', 'Izhmash', '19560123-6666');
 
 -- 1
@@ -173,14 +173,14 @@ from skytt, gevar, ammunition
 where gevar.gevarnamn='Izhmash' AND ammunition.kaliber='.22' AND ammunition.ammonamn='X-act' AND skytt.skyttpnr=ammunition.skyttpnr AND skytt.skyttpnr=gevar.skyttpnr;
 
 -- 5
-select funktionar.namn
-from funktionar, skjutbana, skjutfalt
-where skjutbana.moment='Stående' AND skjutbana.bannr=funktionar.bannr AND skjutfalt.faltnamn=skjutbana.faltnamn;
+select distinct funktionar.namn
+from funktionar, skjutbana
+where skjutbana.moment='Stående' AND skjutbana.bannr=funktionar.bannr;
 
 -- 6
 select distinct temp1.funkpnr
 from funktionar temp1, funktionar temp2
-where temp1.lon = temp2.lon and temp1.funkpnr <> temp2.funkpnr;
+where temp1.lon = temp2.lon AND temp1.funkpnr <> temp2.funkpnr;
 
 -- 7
 select skyttpnr
@@ -238,7 +238,7 @@ from skytt, skjutserie
 where starttid = (select max(starttid) from skjutserie) and skjutserie.skyttpnr=skytt.skyttpnr;
 
 -- 18
--- Det går egentligen inte för min databas sparar inga datum, men jag gör som
+-- Det går egentligen inte för databasen sparar inga datum, men jag gör som
 -- jag skulle ha gjort fast med tid istället för datum
 select *
 from skjutserie
@@ -253,11 +253,6 @@ where lon >= 10000 and lon <= 12000;
 delete from maltavla
 where tavlanr = '8';
 
-select *
-from maltavla;
 -- 21
 delete from skjutserie
 where starttid = '12:01:33' and skyttpnr ='19560123-6666';
-
-select *
-from skjutserie
